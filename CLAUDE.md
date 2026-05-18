@@ -58,7 +58,7 @@ Both files must stay in sync — every new segment needs to be implemented in bo
 - **`segment_enabled`** (bash) / **`Test-SegmentEnabled`** (PowerShell) — linear scan of `ENABLED_SEGMENTS`; only segments listed there are computed.
 - **`file_mtime` / `portable_md5`** (bash only) — cross-platform helpers abstracting macOS vs. Linux `stat` and `md5`/`md5sum` differences.
 - **`ts_errors` segment** — reads a cache file at `/tmp/tsc-errors-<md5-of-cwd>.txt` (or `$TEMP` on Windows) written by an external watcher; cache is ignored if older than 5 minutes. The script never runs `tsc` itself.
-- **`git_branch` segment** — uses branch-specific icons: `◆` (U+25C6, green) for `main`/`master`, `⎇` (U+2387, cyan) for all other branches. Both are standard Unicode — no Nerd Font required.
+- **`git_branch` segment** — uses branch-specific icons: `🏠` (U+1F3E0, green) for `main`/`master`, `⎇` (U+2387, cyan) for all other branches. Both are standard Unicode — no Nerd Font required.
 - **Git commands** always use `--no-optional-locks -C "$cwd"` to avoid interfering with the user's active git operations and to run against the correct working directory regardless of where the script is installed.
 - **ANSI color codes** are constructed with `printf '\033[Nm...\033[0m'` in bash and `"$ESC[Nm...$ESC[0m"` in PowerShell where `$ESC = [char]27`.
 

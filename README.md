@@ -6,8 +6,8 @@ A configurable, segment-based status line for [Claude Code](https://docs.anthrop
 
 ## Features
 
-- **Rich icons** — each segment has a dedicated icon (📂 🧠 🔋 💰 ⏱ ✏ ⚠ and more)
-- **Git branch** — ◆ (green) for `main`/`master`, ⎇ (cyan) for all other branches
+- **Rich icons** — each segment has a dedicated icon (📂 🧠 🔋 💰 ⏱ ± ⚠ and more)
+- **Git branch** — 🏠 (green) for `main`/`master`, ⎇ (cyan) for all other branches
 - **Dirty files** — ● count of uncommitted changes (hidden when clean)
 - **Ahead/behind** — ↑↓ commits ahead/behind remote tracking branch
 - **Model name** — 🧠 which Claude model is active (Opus, Sonnet, Haiku)
@@ -15,10 +15,10 @@ A configurable, segment-based status line for [Claude Code](https://docs.anthrop
 - **Context usage** — 🔋 progress bar with color: green (<50%), yellow (50-79%), red (80%+)
 - **Session cost** — 💰 real cost from Claude Code (not estimated)
 - **Session duration** — ⏱ how long you've been in this session (with seconds)
-- **Lines changed** — ✏ lines added/removed this session
-- **Last commit age** — ⏰ time since last commit, color-coded (green/yellow/red)
+- **Lines changed** — ± lines added/removed this session
+- **Last commit age** — 🕐 time since last commit, color-coded (green/yellow/red)
 - **Stash count** — 📦 number of stashed changesets (hidden when 0)
-- **Reasoning effort** — 🎚 current `effort.level` (low/medium/high/xhigh/max), updates live with `/effort`
+- **Reasoning effort** — 💭 current `effort.level` (low/medium/high/xhigh/max), updates live with `/effort`
 - **Rate limits** — ⏳ Claude.ai 5h/7d quota burn % with color thresholds (Pro/Max plans only)
 - **TypeScript errors** — ⚠ from a cached `tsc` output (non-blocking)
 - **Fully configurable** — toggle any segment on/off via a simple array
@@ -93,18 +93,18 @@ Then restart Claude Code.
 | Segment | Icon | Color | Visible | Data Source |
 |---------|------|-------|---------|-------------|
 | `cwd` | 📂 | White | Always | `json.cwd` |
-| `git_branch` | ◆ / ⎇ | Green (`main`/`master`) / Cyan (others) | In git repos | `git symbolic-ref` |
+| `git_branch` | 🏠 / ⎇ | Green (`main`/`master`) / Cyan (others) | In git repos | `git symbolic-ref` |
 | `dirty` | ● | Yellow | When > 0 | `git status --porcelain` |
 | `ahead_behind` | ↑↓ | Yellow | When > 0 | `git rev-list --left-right` |
+| `lines` | ± | Green/Red | When > 0 | `json.cost.total_lines_added/removed` |
 | `model` | 🧠 | Light purple | When present | `json.model.display_name` |
 | `node` | ⬢ | Green | When node is available | `node --version` |
 | `context` | 🔋 + progress bar | Green/Yellow/Red | When present | `json.context_window.used_percentage` |
 | `cost` | 💰 | Magenta | When present | `json.cost.total_cost_usd` |
 | `duration` | ⏱ | Blue | When > 0s | `json.cost.total_duration_ms` |
-| `lines` | ✏ | Green/Red | When > 0 | `json.cost.total_lines_added/removed` |
-| `last_commit` | ⏰ | Green/Yellow/Red | In git repos | `git log -1 --format=%ct` |
+| `last_commit` | 🕐 | Green/Yellow/Red | In git repos | `git log -1 --format=%ct` |
 | `stash` | 📦 | Yellow | When > 0 | `git stash list` |
-| `effort` | 🎚 | Varies by level | When model supports it | `json.effort.level` |
+| `effort` | 💭 | Varies by level | When model supports it | `json.effort.level` |
 | `rate_limits` | ⏳ | Green/Yellow/Red | Claude.ai Pro/Max only | `json.rate_limits.{five_hour,seven_day}.used_percentage` |
 | `ts_errors` | ⚠ | Red | When > 0 (cached) | `/tmp/tsc-errors-<hash>.txt` |
 
@@ -174,9 +174,9 @@ ICON_NODE="⬢"
 ICON_CONTEXT="🔋"
 ICON_COST="💰"
 ICON_DURATION="⏱"
-ICON_LINES="✏"
+ICON_LINES="±"
 ICON_TS_ERRORS="⚠"
-ICON_LAST_COMMIT="⏰"
+ICON_LAST_COMMIT="🕐"
 ICON_STASH="📦"
 ```
 
@@ -222,15 +222,17 @@ The status line receives a JSON object on stdin from Claude Code. Key fields use
 
 ## Examples
 
-Two example variants are included in the `examples/` directory:
+Several example variants are included in the `examples/` directory:
 
 **Bash (macOS/Linux):**
 - **[`minimal.sh`](examples/minimal.sh)** — Just branch + context + cost. Clean and fast.
 - **[`git-focused.sh`](examples/git-focused.sh)** — Branch, dirty, ahead/behind, last commit age, lines changed. Great for active development.
+- **[`claude-pro-usage.sh`](examples/claude-pro-usage.sh)** — Branch, model, context, rate limits, cost, effort. Focused on Claude.ai usage and budget.
 
 **PowerShell (Windows):**
 - **[`minimal.ps1`](examples/minimal.ps1)** — Just branch + context + cost. Clean and fast.
 - **[`git-focused.ps1`](examples/git-focused.ps1)** — Branch, dirty, ahead/behind, last commit age, lines changed. Great for active development.
+- **[`claude-pro-usage.ps1`](examples/claude-pro-usage.ps1)** — Branch, model, context, rate limits, cost, effort. Focused on Claude.ai usage and budget.
 
 To use an example, copy it to `~/.claude/` and update your `settings.json` command path.
 
@@ -305,7 +307,7 @@ The cache is considered stale after 5 minutes and will be ignored.
 - Or use the `-ExecutionPolicy Bypass` flag: `pwsh -ExecutionPolicy Bypass -NoProfile -File ~/.claude/statusline.ps1`
 
 **Branch icons not showing correctly:**
-- The branch icons (◆ U+25C6 for `main`/`master`, ⎇ U+2387 for other branches) are standard Unicode and do not require a Nerd Font. If they appear as boxes, your terminal font may not include these characters — substitute them in the `git_branch` section of the script.
+- The branch icons (🏠 U+1F3E0 for `main`/`master`, ⎇ U+2387 for other branches) are standard Unicode and do not require a Nerd Font. If they appear as boxes, your terminal font may not include these characters — substitute them in the `git_branch` section of the script.
 
 ## Contributing
 
