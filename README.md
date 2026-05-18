@@ -7,7 +7,7 @@ A configurable, segment-based status line for [Claude Code](https://docs.anthrop
 ## Features
 
 - **Rich icons** — each segment has a dedicated icon (📂 🧠 🔋 💰 ⏱ ✏ ⚠ and more)
-- **Git branch** — current branch with nerd font icon
+- **Git branch** — ◆ (green) for `main`/`master`, ⎇ (cyan) for all other branches
 - **Dirty files** — ● count of uncommitted changes (hidden when clean)
 - **Ahead/behind** — ↑↓ commits ahead/behind remote tracking branch
 - **Model name** — 🧠 which Claude model is active (Opus, Sonnet, Haiku)
@@ -93,7 +93,7 @@ Then restart Claude Code.
 | Segment | Icon | Color | Visible | Data Source |
 |---------|------|-------|---------|-------------|
 | `cwd` | 📂 | White | Always | `json.cwd` |
-| `git_branch` | `` | Cyan | In git repos | `git symbolic-ref` |
+| `git_branch` | ◆ / ⎇ | Green (`main`/`master`) / Cyan (others) | In git repos | `git symbolic-ref` |
 | `dirty` | ● | Yellow | When > 0 | `git status --porcelain` |
 | `ahead_behind` | ↑↓ | Yellow | When > 0 | `git rev-list --left-right` |
 | `model` | 🧠 | Light purple | When present | `json.model.display_name` |
@@ -304,8 +304,8 @@ The cache is considered stale after 5 minutes and will be ignored.
 - Run: `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`
 - Or use the `-ExecutionPolicy Bypass` flag: `pwsh -ExecutionPolicy Bypass -NoProfile -File ~/.claude/statusline.ps1`
 
-**Nerd font icons not showing:**
-- The git branch icon (``) requires a [Nerd Font](https://www.nerdfonts.com/). If you don't use one, the icon will display as a missing character — you can remove the `\ue0a0` from the `git_branch` printf line.
+**Branch icons not showing correctly:**
+- The branch icons (◆ U+25C6 for `main`/`master`, ⎇ U+2387 for other branches) are standard Unicode and do not require a Nerd Font. If they appear as boxes, your terminal font may not include these characters — substitute them in the `git_branch` section of the script.
 
 ## Contributing
 
