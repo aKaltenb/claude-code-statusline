@@ -68,7 +68,7 @@ if [[ -f "$SETTINGS_FILE" ]]; then
     echo "  $existing"
     echo ""
     read -rp "Overwrite with claude-code-statusline? [y/N] " answer
-    if [[ "${answer,,}" != "y" ]]; then
+    if [[ "$(echo "$answer" | tr '[:upper:]' '[:lower:]')" != "y" ]]; then
       echo "Skipped settings.json update. You can manually set:"
       echo "  \"statusLine\": $STATUS_LINE_CONFIG"
       echo ""
