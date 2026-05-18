@@ -19,7 +19,7 @@ A configurable, segment-based status line for [Claude Code](https://docs.anthrop
 - **Last commit age** — 🕐 time since last commit, color-coded (green/yellow/red)
 - **Stash count** — 📦 number of stashed changesets (hidden when 0)
 - **Reasoning effort** — 💭 current `effort.level` (low/medium/high/xhigh/max), updates live with `/effort`
-- **Rate limits** — ⏳ Claude.ai 5h/7d quota burn % with color thresholds (Pro/Max plans only)
+- **Rate limits** — 🚦 Claude.ai 5h/7d quota burn % with color thresholds (Pro/Max plans only)
 - **TypeScript errors** — ⚠ from a cached `tsc` output (non-blocking)
 - **Fully configurable** — toggle any segment on/off via a simple array
 - **Cross-platform** — works on macOS, Linux, and Windows
@@ -105,7 +105,7 @@ Then restart Claude Code.
 | `last_commit` | 🕐 | Green/Yellow/Red | In git repos | `git log -1 --format=%ct` |
 | `stash` | 📦 | Yellow | When > 0 | `git stash list` |
 | `effort` | 💭 | Varies by level | When model supports it | `json.effort.level` |
-| `rate_limits` | ⏳ | Green/Yellow/Red | Claude.ai Pro/Max only | `json.rate_limits.{five_hour,seven_day}.used_percentage` |
+| `rate_limits` | 🚦 | Green/Yellow/Red | Claude.ai Pro/Max only | `json.rate_limits.{five_hour,seven_day}.used_percentage` |
 | `ts_errors` | ⚠ | Red | When > 0 (cached) | `/tmp/tsc-errors-<hash>.txt` |
 
 ## Customization

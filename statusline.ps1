@@ -335,9 +335,9 @@ if (Test-SegmentEnabled "rate_limits") {
             $rl_parts += "${rl_color}$label ${val_int}%$ESC[0m"
         }
         if ($rl_parts.Count -gt 0) {
-            $hourglass = [char]::ConvertFromUtf32(0x231B)
+            $traffic_light = [char]::ConvertFromUtf32(0x1F6A6)
             $joined = $rl_parts -join " "
-            $seg_rate_limits = "$ESC[37m$hourglass$ESC[0m $joined"
+            $seg_rate_limits = "$traffic_light $joined"
         }
     }
 }

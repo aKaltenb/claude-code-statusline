@@ -48,7 +48,7 @@ ICON_TS_ERRORS="⚠"
 ICON_LAST_COMMIT="🕐"
 ICON_STASH="📦"
 ICON_EFFORT="💭"
-ICON_RATE_LIMIT="⏳"
+ICON_RATE_LIMIT="🚦"
 
 # ============================================================================
 # HELPERS
