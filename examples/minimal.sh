@@ -12,11 +12,15 @@ cwd=$(echo "$input" | jq -r '.cwd // empty')
 parts=()
 SEP=$' \033[90m|\033[0m '
 
-# Git branch (cyan)
+# Git branch (◆ green for main/master, ⎇ cyan for others)
 if [[ -n "${cwd:-}" ]]; then
   branch=$(git --no-optional-locks -C "$cwd" symbolic-ref --short HEAD 2>/dev/null || true)
   if [[ -n "$branch" ]]; then
-    parts+=("$(printf '\033[36m\xee\x82\xa0 %s\033[0m' "$branch")")
+    if [[ "$branch" == "main" || "$branch" == "master" ]]; then
+      parts+=("$(printf '\033[32m\xe2\x97\x86 %s\033[0m' "$branch")")
+    else
+      parts+=("$(printf '\033[36m\xe2\x8e\x87 %s\033[0m' "$branch")")
+    fi
   fi
 fi
 

@@ -21,13 +21,18 @@ if ($cwd) {
     $parts += "$ESC[37m$folder $basename$ESC[0m"
 }
 
-# Git branch (cyan)
+# Git branch (◆ green for main/master, ⎇ cyan for others)
 $git_branch = ""
 if ($cwd) {
     $git_branch = & git --no-optional-locks -C $cwd symbolic-ref --short HEAD 2>$null
     if ($git_branch) {
-        $icon = [char]0xe0a0
-        $parts += "$ESC[36m$icon $git_branch$ESC[0m"
+        if ($git_branch -eq "main" -or $git_branch -eq "master") {
+            $icon = [char]::ConvertFromUtf32(0x25C6)
+            $parts += "$ESC[32m$icon $git_branch$ESC[0m"
+        } else {
+            $icon = [char]::ConvertFromUtf32(0x2387)
+            $parts += "$ESC[36m$icon $git_branch$ESC[0m"
+        }
     }
 }
 

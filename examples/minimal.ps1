@@ -14,12 +14,17 @@ $cwd = if ($json.cwd) { $json.cwd } else { "" }
 $parts = @()
 $Sep = " $ESC[90m|$ESC[0m "
 
-# Git branch (cyan)
+# Git branch (◆ green for main/master, ⎇ cyan for others)
 if ($cwd) {
     $branch = & git --no-optional-locks -C $cwd symbolic-ref --short HEAD 2>$null
     if ($branch) {
-        $icon = [char]0xe0a0
-        $parts += "$ESC[36m$icon $branch$ESC[0m"
+        if ($branch -eq "main" -or $branch -eq "master") {
+            $icon = [char]::ConvertFromUtf32(0x25C6)
+            $parts += "$ESC[32m$icon $branch$ESC[0m"
+        } else {
+            $icon = [char]::ConvertFromUtf32(0x2387)
+            $parts += "$ESC[36m$icon $branch$ESC[0m"
+        }
     }
 }
 
