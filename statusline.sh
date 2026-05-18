@@ -17,12 +17,12 @@ ENABLED_SEGMENTS=(
   "git_branch"    # Git branch name
   "dirty"         # Uncommitted file count
   "ahead_behind"  # Commits ahead/behind remote
+  "lines"         # Lines added/removed this session
   "model"         # Active model name
   "node"          # Node.js version
   "context"       # Context window usage %
   "cost"          # Session cost (from Claude Code)
   "duration"      # Session duration (from Claude Code)
-  "lines"         # Lines added/removed this session
   "ts_errors"     # TypeScript errors (cached)
   "last_commit"   # Time since last git commit (green/yellow/red)
   "stash"         # Number of stashed changesets
@@ -43,11 +43,11 @@ ICON_NODE="⬢"
 ICON_CONTEXT="🔋"
 ICON_COST="💰"
 ICON_DURATION="⏱"
-ICON_LINES="✏"
+ICON_LINES="±"
 ICON_TS_ERRORS="⚠"
-ICON_LAST_COMMIT="⏰"
+ICON_LAST_COMMIT="🕐"
 ICON_STASH="📦"
-ICON_EFFORT="🎚"
+ICON_EFFORT="💭"
 ICON_RATE_LIMIT="⏳"
 
 # ============================================================================
@@ -103,7 +103,7 @@ if segment_enabled "git_branch" && [[ -n "${cwd:-}" ]]; then
   git_branch=$(git --no-optional-locks -C "$cwd" symbolic-ref --short HEAD 2>/dev/null || true)
   if [[ -n "$git_branch" ]]; then
     if [[ "$git_branch" == "main" || "$git_branch" == "master" ]]; then
-      seg_git_branch=$(printf '\033[32m\xe2\x97\x86 %s\033[0m' "$git_branch")
+      seg_git_branch=$(printf '\033[32m\xf0\x9f\x8f\xa0 %s\033[0m' "$git_branch")
     else
       seg_git_branch=$(printf '\033[36m\xe2\x8e\x87 %s\033[0m' "$git_branch")
     fi
@@ -352,12 +352,12 @@ parts=()
 [[ -n "$seg_git_branch" ]]   && parts+=("$seg_git_branch")
 [[ -n "$seg_dirty" ]]        && parts+=("$seg_dirty")
 [[ -n "$seg_ahead_behind" ]] && parts+=("$seg_ahead_behind")
+[[ -n "$seg_lines" ]]        && parts+=("$seg_lines")
 [[ -n "$seg_model" ]]        && parts+=("$seg_model")
 [[ -n "$seg_node" ]]         && parts+=("$seg_node")
 [[ -n "$seg_context" ]]      && parts+=("$seg_context")
 [[ -n "$seg_cost" ]]         && parts+=("$seg_cost")
 [[ -n "$seg_duration" ]]     && parts+=("$seg_duration")
-[[ -n "$seg_lines" ]]        && parts+=("$seg_lines")
 [[ -n "$seg_ts_errors" ]]    && parts+=("$seg_ts_errors")
 [[ -n "$seg_last_commit" ]]  && parts+=("$seg_last_commit")
 [[ -n "$seg_stash" ]]        && parts+=("$seg_stash")

@@ -18,12 +18,12 @@ $EnabledSegments = @(
     "git_branch"    # Git branch name
     "dirty"         # Uncommitted file count
     "ahead_behind"  # Commits ahead/behind remote
+    "lines"         # Lines added/removed this session
     "model"         # Active model name
     "node"          # Node.js version
     "context"       # Context window usage %
     "cost"          # Session cost (from Claude Code)
     "duration"      # Session duration (from Claude Code)
-    "lines"         # Lines added/removed this session
     "ts_errors"     # TypeScript errors (cached)
     "last_commit"   # Time since last git commit (green/yellow/red)
     "stash"         # Number of stashed changesets
@@ -74,7 +74,7 @@ if ((Test-SegmentEnabled "git_branch") -and $cwd) {
         $git_branch = & git --no-optional-locks -C $cwd symbolic-ref --short HEAD 2>$null
         if ($git_branch) {
             if ($git_branch -eq "main" -or $git_branch -eq "master") {
-                $icon = [char]::ConvertFromUtf32(0x25C6)
+                $icon = [char]::ConvertFromUtf32(0x1F3E0)
                 $seg_git_branch = "$ESC[32m$icon $git_branch$ESC[0m"
             } else {
                 $icon = [char]::ConvertFromUtf32(0x2387)
@@ -217,8 +217,8 @@ if (Test-SegmentEnabled "lines") {
     $lines_added = if ($json.cost.total_lines_added) { $json.cost.total_lines_added } else { 0 }
     $lines_removed = if ($json.cost.total_lines_removed) { $json.cost.total_lines_removed } else { 0 }
     if ($lines_added -gt 0 -or $lines_removed -gt 0) {
-        $pencil = [char]::ConvertFromUtf32(0x270F)
-        $seg_lines = "$ESC[32m$pencil +$lines_added$ESC[0m/$ESC[31m-$lines_removed$ESC[0m"
+        $lines_icon = [char]::ConvertFromUtf32(0x00B1)
+        $seg_lines = "$ESC[32m$lines_icon +$lines_added$ESC[0m/$ESC[31m-$lines_removed$ESC[0m"
     }
 }
 
@@ -270,7 +270,7 @@ if ((Test-SegmentEnabled "last_commit") -and $cwd -and $git_branch) {
             } else {
                 $lc_color = "$ESC[32m"   # green
             }
-            $clock = [char]::ConvertFromUtf32(0x23F0)
+            $clock = [char]::ConvertFromUtf32(0x1F550)
             $seg_last_commit = "${lc_color}$clock $age_str$ESC[0m"
         }
     } catch {}
@@ -306,8 +306,8 @@ if (Test-SegmentEnabled "effort") {
             "max"    { $eff_color = "$ESC[31m" }
             default  { $eff_color = "$ESC[37m" }
         }
-        $slider = [char]::ConvertFromUtf32(0x1F39A)
-        $seg_effort = "${eff_color}$slider $effort_level$ESC[0m"
+        $effort_icon = [char]::ConvertFromUtf32(0x1F4AD)
+        $seg_effort = "${eff_color}$effort_icon $effort_level$ESC[0m"
     }
 }
 
@@ -351,12 +351,12 @@ if ($seg_cwd)          { $parts += $seg_cwd }
 if ($seg_git_branch)   { $parts += $seg_git_branch }
 if ($seg_dirty)        { $parts += $seg_dirty }
 if ($seg_ahead_behind) { $parts += $seg_ahead_behind }
+if ($seg_lines)        { $parts += $seg_lines }
 if ($seg_model)        { $parts += $seg_model }
 if ($seg_node)         { $parts += $seg_node }
 if ($seg_context)      { $parts += $seg_context }
 if ($seg_cost)         { $parts += $seg_cost }
 if ($seg_duration)     { $parts += $seg_duration }
-if ($seg_lines)        { $parts += $seg_lines }
 if ($seg_ts_errors)    { $parts += $seg_ts_errors }
 if ($seg_last_commit)  { $parts += $seg_last_commit }
 if ($seg_stash)        { $parts += $seg_stash }
