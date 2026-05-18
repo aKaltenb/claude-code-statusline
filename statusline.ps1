@@ -73,8 +73,13 @@ if ((Test-SegmentEnabled "git_branch") -and $cwd) {
     try {
         $git_branch = & git --no-optional-locks -C $cwd symbolic-ref --short HEAD 2>$null
         if ($git_branch) {
-            $icon = [char]::ConvertFromUtf32(0x1F33F)
-            $seg_git_branch = "$ESC[36m$icon $git_branch$ESC[0m"
+            if ($git_branch -eq "main" -or $git_branch -eq "master") {
+                $icon = [char]::ConvertFromUtf32(0x25C6)
+                $seg_git_branch = "$ESC[32m$icon $git_branch$ESC[0m"
+            } else {
+                $icon = [char]::ConvertFromUtf32(0x2387)
+                $seg_git_branch = "$ESC[36m$icon $git_branch$ESC[0m"
+            }
         }
     } catch {}
 }

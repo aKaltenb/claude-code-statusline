@@ -102,7 +102,11 @@ git_branch=""
 if segment_enabled "git_branch" && [[ -n "${cwd:-}" ]]; then
   git_branch=$(git --no-optional-locks -C "$cwd" symbolic-ref --short HEAD 2>/dev/null || true)
   if [[ -n "$git_branch" ]]; then
-    seg_git_branch=$(printf '\033[36m\xee\x82\xa0 %s\033[0m' "$git_branch")
+    if [[ "$git_branch" == "main" || "$git_branch" == "master" ]]; then
+      seg_git_branch=$(printf '\033[32m\xe2\x97\x86 %s\033[0m' "$git_branch")
+    else
+      seg_git_branch=$(printf '\033[36m\xe2\x8e\x87 %s\033[0m' "$git_branch")
+    fi
   fi
 fi
 
